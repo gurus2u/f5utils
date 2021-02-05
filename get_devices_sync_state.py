@@ -58,7 +58,6 @@ else:
 
 with open('output.csv', 'w+') as outfile:
     for ltm in ltm_list:
-
         b = bigsuds.BIGIP(ltm, ltm_user, ltm_password)
         try:
             ver = b.System.SystemInfo.get_version()
