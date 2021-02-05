@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
 ######################################################################################################
-## Purpose: Get Device statuses
+## Purpose: Get F5 Device statuses
 ## By Guru Palanisamy 
+## Usage: get_devices_sync_state -u user_id -f devices.lst 
+##
 ## -------- -------- ----------------------------
 ## Date:    Initials Comments
 ## -------- -------- ----------------------------
@@ -27,24 +29,9 @@ except NameError:
 my_parser = argparse.ArgumentParser(description='List the content of a folder')
 
 # Add the arguments
-my_parser.add_argument('-u',
-                       '--user',
-                       help='F5 User name', 
-                       required=False)
-
-my_parser.add_argument('-p', 
-                        '--password',
-                        help='F5 Password', 
-                        required=False)
-
-my_parser.add_argument('-f', 
-                        '--file',
-                        help='Input file with device hostnames or Management IPs one per line', 
-                        required=False)
-
-my_parser.add_argument('-v', '--verbose', 
-                        action='store_true', 
-                        help='an optional argument' )
+my_parser.add_argument('-u', '--user', help='F5 User name', required=False)
+my_parser.add_argument('-p', '--password', help='F5 Password', required=False)
+my_parser.add_argument('-f', '--file', help='Input file with device hostnames or Management IPs one per line', required=False)
 
 # Execute the parse_args() method
 args = my_parser.parse_args()
@@ -69,14 +56,12 @@ if args.file:
 else:
     ltm_list[0] = input("F5 Device IP or hostname:")
 
-
 with open('output.csv', 'w+') as outfile:
     for ltm in ltm_list:
 
         b = bigsuds.BIGIP(ltm, ltm_user, ltm_password)
         try:
             ver = b.System.SystemInfo.get_version()
-            pprint( b.System.syslog.get_list() )
             ha_state=b.System.Failover.get_failover_state().replace('FAILOVER_STATE_','')
             f5state=b.Management.DeviceGroup.get_sync_status_overview()
             print(f"{ltm}, {ver}, {ha_state}, {f5state['status']}, {f5state['details'][-1]}")
