@@ -63,8 +63,8 @@ with open('output.csv', 'w+') as outfile:
             ver = b.System.SystemInfo.get_version()
             ha_state=b.System.Failover.get_failover_state().replace('FAILOVER_STATE_','')
             f5state=b.Management.DeviceGroup.get_sync_status_overview()
-            print(f"{ltm}, {ver}, {ha_state}, {f5state['status']}, {f5state['details'][-1]}")
-            outfile.write(f"{ltm}, {ver}, {ha_state}, {f5state['status']}, {f5state['details'][-1]}\n")
+            print(f"{ltm}, {ver}, {ha_state}, {f5state['status']}, {''.join(f5state['details'])}")
+            outfile.write(f"{ltm}, {ver}, {ha_state}, {f5state['status']}, {''.join(f5state['details'])}\n")
 
         except Exception as ex:
             print("Error: unable to connect to " + ltm + ". Skipping")
