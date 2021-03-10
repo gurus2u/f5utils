@@ -57,6 +57,7 @@ else:
     ltm_list[0] = input("F5 Device IP or hostname:")
 
 with open('output.csv', 'w+') as outfile:
+    outfile.write("Device,Version,Role,Sync,State,Comments\n")
     for ltm in ltm_list:
         b = bigsuds.BIGIP(ltm, ltm_user, ltm_password)
         try:
